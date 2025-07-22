@@ -1,0 +1,258 @@
+<!-- popup.liquid -->
+<div id="custom-popup" class="popup-overlay" style="background-color: rgba(0,0,0,0.6);">
+  <div class="popup-content" style="
+    background-color: {{ section.settings.background_color }};
+    text-align: {{ section.settings.text_alignment }};
+    font-size: {{ section.settings.font_size_text }}px;
+  ">
+    {% if section.settings.logo != blank %}
+     <img src="{{ section.settings.logo | img_url: 'master' }}" alt="Logo" class="popup-logo" style="width: {{ section.settings.logo_width }}px;"/>
+
+    {% endif %}
+    
+    <h2 class="popup-heading" style="font-size: {{ section.settings.font_size_heading }}px;">
+      {{ section.settings.heading }}
+    </h2>
+
+    <p class="popup-text" style="font-size: {{ section.settings.text_size }}px;">
+      {{ section.settings.text }}
+    </p>
+
+    {% if section.settings.button_text != blank %}
+      <a href="{{ section.settings.button_link }}" class="popup-button" style="
+        background-color: {{ section.settings.button_bg }};
+        color: {{ section.settings.button_text_color }};
+        font-size: {{ section.settings.font_size_button }}px;
+      ">
+        {{ section.settings.button_text }}
+      </a>
+    {% endif %}
+
+    <button class="popup-close" onclick="document.getElementById('custom-popup').style.display='none'">×</button>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var popup = document.getElementById('custom-popup');
+
+    // Check if we've shown it before
+    if (localStorage.getItem('customPopupShown') === 'true') {
+      popup.style.display = 'none';
+    } else {
+      popup.style.display = 'block';
+    }
+
+    // Attach to close button
+    var closeButton = popup.querySelector('.popup-close');
+    closeButton.addEventListener('click', function() {
+      popup.style.display = 'none';
+      localStorage.setItem('customPopupShown', 'true');
+    });
+  });
+</script>
+
+
+
+<style>
+  .popup-overlay {
+    display: block;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.6);
+  }
+
+
+  .popup-content {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 40px 250px;
+  background-color: {{ section.settings.background_color }};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* Aligns content to left */
+  text-align: {{ section.settings.text_alignment }}; /* still controls text inside */
+  position: relative;
+}
+
+
+  .popup-logo {
+    max-width: 500px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .popup-heading {
+    margin: 10px 0;
+  }
+
+  .popup-button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 15px;
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: #00000;
+    cursor: pointer;
+    z-index: 10000;
+  }
+
+  .popup-heading,
+.popup-text {
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .popup-content {
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .popup-logo {
+    width: 80%;
+    max-width: 200px;
+  }
+
+  .popup-heading {
+    font-size: calc({{ section.settings.heading_size | default: 32 }}px * 0.7);
+  }
+
+  .popup-text {
+    font-size: calc({{ section.settings.paragraph_size | default: 16 }}px * 0.85);
+  }
+
+  .popup-button {
+    width: 100%;
+    font-size: calc({{ section.settings.button_font_size | default: 16 }}px * 0.85);
+  }
+
+  .popup-close {
+    font-size: 24px;
+    top: 10px;
+    right: 15px;
+  }
+}
+</style>
+
+
+{% schema %}
+{
+  "name": "Full Width Popup",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Popup Heading",
+      "default": "Welcome to Our Store!"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Popup Text",
+      "default": "Sign up now to get exclusive deals and updates."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Popup Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background Color",
+      "default": "#0B5B9D"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size_heading",
+      "label": "Heading Font Size (px)",
+      "default": 24,
+      "min": 16,
+      "max": 80,
+      "step": 1
+    },
+    {
+  "type": "range",
+  "id": "text_size",
+  "label": "Text Size (px)",
+  "min": 12,
+  "max": 48,
+  "step": 1,
+  "default": 16
+},
+
+    {
+      "type": "range",
+      "id": "font_size_button",
+      "label": "Button Font Size (px)",
+      "default": 16,
+      "min": 12,
+      "max": 40,
+      "step": 1
+    },
+{
+  "type": "range",
+  "id": "logo_width",
+  "label": "Logo Width (px)",
+  "min": 100,
+  "max": 500,
+  "step": 10,
+  "default": 150
+}
+
+  ],
+  "presets": [
+    {
+      "name": "Full Width Popup"
+    }
+  ]
+}
+{% endschema %}
